@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\IceCreamResource\Pages;
-use App\Filament\Resources\IceCreamResource\RelationManagers;
-use App\Models\IceCream;
+use App\Filament\Resources\ExtraOptionResource\Pages;
+use App\Filament\Resources\ExtraOptionResource\RelationManagers;
+use App\Models\ExtraOption;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,16 +13,15 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class IceCreamResource extends Resource
+class ExtraOptionResource extends Resource
 {
-    protected static ?string $model = IceCream::class;
+    protected static ?string $model = ExtraOption::class;
 
-    protected static ?string $label = 'Fagylalt';
-    protected static ?string $pluralLabel = 'Fagylaltok';
+    protected static ?string $label = 'Extra opció';
+    protected static ?string $pluralLabel = 'Extra opciók';
+    protected static ?string $navigationIcon = 'heroicon-o-percent-badge';
 
-    protected static ?string $navigationIcon = 'heroicon-o-plus-circle';
-
-    protected static ?int $navigationSort = 5;
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
@@ -34,7 +33,7 @@ class IceCreamResource extends Resource
                         Forms\Components\TextInput::make('name')
                             ->required()
                             ->maxLength(255)
-                            ->label('Fagylalt neve'),
+                            ->label('Megnevezés'),
                         Forms\Components\Toggle::make('is_visible')
                             ->label('Látható')
                             ->onColor('success')
@@ -47,7 +46,7 @@ class IceCreamResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->label('Fagylalt neve')->searchable(),
+                Tables\Columns\TextColumn::make('name')->label('Megnevezés')->searchable(),
                 Tables\Columns\ToggleColumn::make('is_visible')->onColor('success')->offColor('danger')->label('Látható')
             ])
             ->filters([
@@ -73,9 +72,9 @@ class IceCreamResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListIceCreams::route('/'),
-           /* 'create' => Pages\CreateIceCream::route('/create'),
-            'edit' => Pages\EditIceCream::route('/{record}/edit'),*/
+            'index' => Pages\ListExtraOptions::route('/'),
+            /* 'create' => Pages\CreateExtraOption::route('/create'),
+             'edit' => Pages\EditExtraOption::route('/{record}/edit'),*/
         ];
     }
 }
