@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ProductResource\Pages;
-use App\Filament\Resources\ProductResource\RelationManagers;
-use App\Models\Product;
+use App\Filament\Resources\IceCreamResource\Pages;
+use App\Filament\Resources\IceCreamResource\RelationManagers;
+use App\Models\IceCream;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,16 +13,16 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ProductResource extends Resource
+class IceCreamResource extends Resource
 {
-    protected static ?string $model = Product::class;
+    protected static ?string $model = IceCream::class;
 
-    protected static ?string $label = 'Termék';
-    protected static ?string $pluralLabel = 'Termékek';
+    protected static ?string $label = 'Fagylalt';
+    protected static ?string $pluralLabel = 'Fagylaltok';
 
-    protected static ?string $navigationIcon = 'heroicon-o-swatch';
+    protected static ?string $navigationIcon = 'heroicon-o-plus-circle';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 5;
 
     public static function form(Form $form): Form
     {
@@ -39,10 +39,6 @@ class ProductResource extends Resource
                             ->label('Látható')
                             ->onColor('success')
                             ->offColor('danger'),
-                        Forms\Components\RichEditor::make('description')
-                            ->label('Leírás')
-                            ->columnSpanFull(),
-
                     ])
             ]);
     }
@@ -77,9 +73,9 @@ class ProductResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProducts::route('/'),
-            'create' => Pages\CreateProduct::route('/create'),
-            'edit' => Pages\EditProduct::route('/{record}/edit'),
+            'index' => Pages\ListIceCreams::route('/'),
+           /* 'create' => Pages\CreateIceCream::route('/create'),
+            'edit' => Pages\EditIceCream::route('/{record}/edit'),*/
         ];
     }
 }
