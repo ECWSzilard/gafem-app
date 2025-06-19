@@ -6,47 +6,39 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::prefix('api')
-    ->middleware('api')
-    ->group(function () {
+$controller = \App\Http\Controllers\CommunicationController::class;
 
-        $controller = \App\Http\Controllers\CommunicationController::class;
+Route::get('/order-data', [
+    $controller,
+    'orderData'
+])->name('order-data');
 
-        Route::get('/order-data', [
-            $controller,
-            'orderData'
-        ])->name('order-data');
+Route::get('/products', [
+    $controller,
+    'products'
+])->name('products');
 
-        Route::get('/products', [
-            $controller,
-            'products'
-        ])->name('products');
+Route::get('/ice-creams', [
+    $controller,
+    'iceCreams'
+])->name('ice-creams');
 
-        Route::get('/ice-creams', [
-            $controller,
-            'iceCreams'
-        ])->name('ice-creams');
+Route::get('/servings', [
+    $controller,
+    'servings'
+])->name('servings');
 
-        Route::get('/servings', [
-            $controller,
-            'servings'
-        ])->name('servings');
+Route::get('/extra-options', [
+    $controller,
+    'extraOptions'
+])->name('extra-options');
 
-        Route::get('/extra-options', [
-            $controller,
-            'extraOptions'
-        ])->name('extra-options');
+Route::post('/new-order', [
+    $controller,
+    'newOrder'
+])->name('new-order');
 
-        Route::post('/new-order', [
-            $controller,
-            'newOrder'
-        ])->name('new-order');
-
-        Route::get('/today', [
-            $controller,
-            'todayOrders'
-        ])->name('today-orders');
-
-    });
-
-
+Route::get('/today', [
+    $controller,
+    'todayOrders'
+])->name('today-orders');
