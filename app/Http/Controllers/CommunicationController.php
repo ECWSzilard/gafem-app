@@ -121,6 +121,6 @@ class CommunicationController extends Controller
             ];
         }
 
-        return $response;
+        return response()->json($response, 200);
     }
 }
