@@ -29,6 +29,11 @@ Route::get('/extra-options', [
     'extraOptions'
 ])->name('extra-options');
 
+Route::post('/new-order',[
+   $controller,
+   'newOrder'
+])->name('new-order');
+
 
 Route::get('/today', [
     $controller,

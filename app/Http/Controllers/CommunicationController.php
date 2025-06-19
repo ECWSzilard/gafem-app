@@ -123,4 +123,9 @@ class CommunicationController extends Controller
 
         return response()->json($response, 200);
     }
+
+    public function newOrder(Request $request)
+    {
+        return response()->json($request->all(), 200);
+    }
 }
