@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware([
     'web',
-    VerifyCsrfToken::class,
 ])->group(function () {
     $controller = \App\Http\Controllers\CommunicationController::class;
 
@@ -39,9 +38,9 @@ Route::middleware([
         'newOrder'
     ])->name('new-order');
 
-
     Route::get('/today', [
         $controller,
         'todayOrders'
     ])->name('today-orders');
+
 });
