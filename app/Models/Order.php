@@ -40,4 +40,19 @@ class Order extends Model
     {
         return $this->hasOne(Product::class, 'id', 'product_id');
     }
+
+    public function serving()
+    {
+        return $this->hasOne(Serving::class, 'id', 'serving_id');
+    }
+
+    public function iceCreams()
+    {
+        return $this->belongsToMany(IceCream::class, 'order_ice_creams', 'order_id', 'ice_cream_id');
+    }
+
+    public function extraOptions()
+    {
+        return $this->belongsToMany(ExtraOption::class, 'order_extra_options', 'order_id', 'extra_option_id');
+    }
 }

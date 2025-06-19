@@ -126,6 +126,44 @@ class CommunicationController extends Controller
 
     public function newOrder(Request $request)
     {
-        return response()->json($request->all(), 200);
+        try {
+            // Decrypt IDs
+            $productId = Crypt::decrypt($request->waffle['id']);
+            $servingId = Crypt::decrypt($request->serving['id']);
+
+            // Create new order
+            $order = new Order();
+            $order->product_id = $productId;
+            $order->serving_id = $servingId;
+            $order->status = 'pending';
+            $order->save();
+
+            // Attach ice creams
+            if (isset($request->iceCream) && is_array($request->iceCream)) {
+                foreach ($request->iceCream as $iceCream) {
+                    $iceCreamId = Crypt::decrypt($iceCream['id']);
+                    $order->iceCreams()->attach($iceCreamId);
+                }
+            }
+
+            // Attach extras
+            if (isset($request->extras) && is_array($request->extras)) {
+                foreach ($request->extras as $extra) {
+                    $extraId = Crypt::decrypt($extra['id']);
+                    $order->extraOptions()->attach($extraId);
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Order created successfully',
+                'order_id' => $order->generated_id
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create order: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }
