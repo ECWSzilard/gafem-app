@@ -177,16 +177,15 @@ class CommunicationController extends Controller
 
     public function orders()
     {
-        $orders = Order::groupBy(DB::raw('DATE(created_at)'))
-            ->get([
-                'created_at'
-            ]);
+        $orders = Order::selectRaw('DATE(created_at) as date')
+            ->groupBy(DB::raw('DATE(created_at)'))
+            ->get();
 
         $response = [];
 
         foreach ($orders as $order) {
             $response[] = [
-                'date' => Carbon::parse($order->status)->format('Y-m-d'),
+                'date' => $order->date,
             ];
         }
 
