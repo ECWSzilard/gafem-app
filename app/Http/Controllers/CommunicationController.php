@@ -7,8 +7,10 @@ use App\Models\IceCream;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Serving;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 
 class CommunicationController extends Controller
 {
@@ -103,9 +105,15 @@ class CommunicationController extends Controller
         return $response;
     }
 
-    public function todayOrders()
+    public function todayOrders(Request $request)
     {
-        $orders = Order::whereDate('created_at', today())->get([
+        if ($request->has('date')) {
+            $date = $request->date;
+        } else {
+            $date = today();
+        }
+
+        $orders = Order::whereDate('created_at', $date)->get([
             'status',
             'generated_id',
             'product_id'
@@ -156,14 +164,72 @@ class CommunicationController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Order created successfully',
+                'message' => 'Sikeresen létre lett hozva a rendelés',
                 'order_id' => $order->generated_id
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to create order: ' . $e->getMessage()
+                'message' => 'Sikeretelen rendelés létrehozva: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    public function orders()
+    {
+        $orders = Order::groupBy(DB::raw('DATE(created_at)'))
+            ->get([
+                'created_at'
+            ]);
+
+        $response = [];
+
+        foreach ($orders as $order) {
+            $response[] = [
+                'date' => Carbon::parse($order->status)->format('Y-m-d'),
+            ];
+        }
+
+        return response()->json($response, 200);
+    }
+
+    public function orderDetails($id)
+    {
+        $order = Order::where('generated_id', $id)->first();
+
+        $response = [];
+
+        if ($order) {
+            $response['id'] = $order->generated_id;
+            $response['status'] = $order->status;
+            $response['product'] = $order->product->name;
+            $response['serving'] = $order->serving->name;
+            $response['iceCreams'] = $order->iceCreams->pluck('name');
+            $response['extras'] = $order->extraOptions->pluck('name');
+        }
+
+        return response()->json($response, 200);
+    }
+
+    public function changeStatus($id)
+    {
+        $order = Order::where('generated_id', $id)->first();
+
+        if ($order) {
+            if ($order->status == 'pending') {
+                $order->status = 'done';
+                $order->save();
+            } else {
+                return response()->json([
+                    'response' => false,
+                    'message' => 'Már frissítve volt a státusz!'
+                ]);
+            }
+        }
+
+        return response()->json([
+            'response' => true,
+            'message' => 'Sikeres státusz frissités'
+        ]);
     }
 }
